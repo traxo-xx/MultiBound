@@ -1,7 +1,7 @@
 ﻿Imports System.IO
 Imports System.IO.Compression
 Imports BasicUFL
-Module Misc
+Public Module Misc
     Public Function Combine(ByVal arrays As Byte()()) As Byte()
         Dim ret As Byte() = New Byte(arrays.Sum(Function(x) x.Length) - 1) {}
         Dim offset As Integer = 0
@@ -35,4 +35,11 @@ Module Misc
         d.Close()
         Return m.ToArray
     End Function
+    Public Enum ChatChannel
+        Universe = 1
+        World = 0
+        Whisper = 2
+        CommandResult = 3
+        White = 4
+    End Enum
 End Module

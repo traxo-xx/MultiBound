@@ -17,7 +17,7 @@ Public Class StarServer
             Console.WriteLine("Incoming Connection @ " & connClient.mClient.Client.LocalEndPoint.ToString)
             AddHandler connClient.dataReceived, AddressOf messageReceived
             Clients.Add(connClient)
-            Dim p As New ProtocolVersionPacket
+            Dim p As New ProtocolVersionPacket({})
             Clients.Last.SendMessage(p.GetByteArray)
             Console.WriteLine("Sending Server Protocol: " & BitConverter.ToString(p.GetByteArray))
         Loop
@@ -38,14 +38,14 @@ Public Class StarServer
                     Console.WriteLine("Sending ConnectResponse... [INCOMPLETE]")
                     'Console.WriteLine("02-06-01-47-00-0d-81-f8-7d-78-9c-ed-dc-7b-b0-a4-f9-59-d8-f7-ee-f7-9c-ee-73-ba-fb-9c-b7-fb-ed-7e-ef-7b-bf-df-ef (cut off)")
                     sender.SendMessage(ConnectResponse)
+                Case OPCodes.ClientDisconnect
+                    sender.mClient.Close()
                 Case OPCodes.ClientContextUpdate
 
                 Case OPCodes.ChatRecieve
-                    Dim chatpacket As New ChatReceivePacket
-                    Dim a = Misc.TrimNull(arr)
-                    chatpacket.LoadByteArray(a)
-                    Console.WriteLine("New chat: " & chatpacket.Text)
-                    Dim chat As New ChatSendPacket
+                    Dim chatpacket As New ChatReceivePacket(Misc.TrimNull(Data.ToArray))
+                    Console.WriteLine("New chat: " & chatpacket.Name & ": " & chatpacket.Text)
+                    Dim chat As New ChatSendPacket("", ChatChannel.Universe, "player", chatpacket.Text)
                     chat.Text = chatpacket.Text
                     For Each p In Clients
                         Dim lel = chat.GetByteArray
@@ -67,6 +67,7 @@ Public Class StarServer
         ProtocolVersion = &H0
         ClientConnect = &H6
         HandshakeChallenge = &H3
+        ClientDisconnect = &H7
         HandshakeResponse = &H8
         ConnectResponse = &H1
         ClientContextUpdate = &HB
@@ -106,7 +107,7 @@ Public Class ConnectedClient
     End Property
 
     Private Sub doRead()
-        mClient.ReceiveBufferSize = &H8888
+        mClient.ReceiveBufferSize = &H1337
         Do
             Dim l(mClient.ReceiveBufferSize) As Byte
             mClient.GetStream.Read(l, 0, mClient.ReceiveBufferSize)
