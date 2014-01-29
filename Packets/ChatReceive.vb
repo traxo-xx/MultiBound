@@ -23,6 +23,6 @@
         Text = ReadString(0.5)
     End Sub
     Public Overrides Function GetByteArray() As Byte()
-
+        Return Nothing
     End Function
 End Class

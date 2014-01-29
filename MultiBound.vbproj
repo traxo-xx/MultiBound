@@ -101,8 +101,8 @@
     <Compile Include="Packets\HandshakeChallenge.vb" />
     <Compile Include="Packets\Packet.vb" />
     <Compile Include="Packets\ProtocolVersion.vb" />
+    <Compile Include="Player.vb" />
     <Compile Include="StarServer.vb" />
-    <Compile Include="VLQ.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

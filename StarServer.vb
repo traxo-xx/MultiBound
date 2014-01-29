@@ -19,7 +19,6 @@ Public Class StarServer
             Clients.Add(connClient)
             Dim p As New ProtocolVersionPacket({})
             Clients.Last.SendMessage(p.GetByteArray)
-            Console.WriteLine("Sending Server Protocol: " & BitConverter.ToString(p.GetByteArray))
         Loop
     End Sub
     Public Event DataRecieved(ByVal client As ConnectedClient, ByVal Message As List(Of Byte))
@@ -30,13 +29,13 @@ Public Class StarServer
             Console.WriteLine("Opcode 0x" & Data(0).ToString("X2"))
             Select Case Data(0)
                 Case OPCodes.ClientConnect
+                    Console.WriteLine("Reading client statement...")
+                    Dim con As New ClientConnectPacket(Misc.TrimNull(Data.ToArray))
                     Console.WriteLine("Success! Sending HandshakeChallenge...")
-                    'Console.WriteLine(BitConverter.ToString(HandshakeChallenge))
                     sender.SendMessage(HandshakeChallenge)
                 Case OPCodes.HandshakeResponse
                     Console.WriteLine("In the tradeoff of passwords for workingness, HandshakeResponse is automatically accepted")
                     Console.WriteLine("Sending ConnectResponse... [INCOMPLETE]")
-                    'Console.WriteLine("02-06-01-47-00-0d-81-f8-7d-78-9c-ed-dc-7b-b0-a4-f9-59-d8-f7-ee-f7-9c-ee-73-ba-fb-9c-b7-fb-ed-7e-ef-7b-bf-df-ef (cut off)")
                     sender.SendMessage(ConnectResponse)
                 Case OPCodes.ClientDisconnect
                     sender.mClient.Close()
@@ -44,7 +43,7 @@ Public Class StarServer
 
                 Case OPCodes.ChatRecieve
                     Dim chatpacket As New ChatReceivePacket(Misc.TrimNull(Data.ToArray))
-                    Console.WriteLine("New chat: " & chatpacket.Name & ": " & chatpacket.Text)
+                    Console.WriteLine("New chat: " & sender.Username & ": " & chatpacket.Text)
                     Dim chat As New ChatSendPacket("", ChatChannel.Universe, "player", chatpacket.Text)
                     chat.Text = chatpacket.Text
                     For Each p In Clients
@@ -79,7 +78,6 @@ End Class
 Public Class ConnectedClient
     Public mClient As System.Net.Sockets.TcpClient
 
-    Private mUsername As String
     Private readThread As System.Threading.Thread
     Private heartbeatThread As System.Threading.Thread
 
@@ -97,14 +95,7 @@ Public Class ConnectedClient
         'heartbeatThread.Start()
     End Sub
 
-    Public Property Username() As String
-        Get
-            Return mUsername
-        End Get
-        Set(ByVal value As String)
-            mUsername = value
-        End Set
-    End Property
+    Public Property Username As String
 
     Private Sub doRead()
         mClient.ReceiveBufferSize = &H1337

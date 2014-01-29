@@ -11,6 +11,9 @@
         index += 1
         Return r
     End Function
+    Public Function ReadByteArray() As Byte()
+        Return ReadBytes(ReadByte())
+    End Function
     Public Function ReadBytes(ByVal Amount As UInteger) As Byte()
         Dim r As New List(Of Byte)
         For i As UInteger = 1 To Amount
