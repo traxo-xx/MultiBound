@@ -9,7 +9,22 @@
     'Public MustOverride Sub LoadByteArray(ByVal ByteArray As Byte())
     Private index As UInteger = 0
     Public Function Package() As Byte()
-        Throw New NotImplementedException("VLQ section not finished, this will be completed by then")
+        Dim size
+        Dim f As Boolean
+        If Payload.Count < 256 Then
+            f = False
+            size = CByte(Payload.Count)
+        Else
+            f = True
+            size = TosVLQ(Payload.Count)
+        End If
+        If Not f Then
+            Dim ar As Byte() = {OPCode, size}
+            Return Combine({ar, Payload})
+        Else
+            Dim ar As Byte() = {OPCode}
+            Return Combine({ar, size, Payload})
+        End If
     End Function
     Public Function ReadByte() As Byte
         Dim r = Payload(index)
