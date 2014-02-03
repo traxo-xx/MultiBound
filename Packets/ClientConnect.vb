@@ -1,7 +1,7 @@
 ﻿Public Class ClientConnectPacket
     Inherits Packet
 
-    Public Property OPCode As Byte = &H6
+    Public Overrides Property OPCode As Byte = &H6
     Public Property AssetDigest As Byte()
     Public Property Claim As Object
     Public Property UUID As Byte()

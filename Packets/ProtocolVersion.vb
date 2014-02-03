@@ -1,6 +1,6 @@
 ﻿Public Class ProtocolVersionPacket
     Inherits Packet
-    Public Const OPCode As Byte = &H0
+    Public Overrides Property OPCode As Byte = &H0
     Public Const Length As Byte = &H8
     Public Const Version As UInt32 = 636
 

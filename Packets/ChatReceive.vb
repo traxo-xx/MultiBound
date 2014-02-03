@@ -1,7 +1,7 @@
 ﻿Public Class ChatReceivePacket
     Inherits Packet
 
-    Public Property OPCode As Byte = &H11
+    Public Overrides Property OPCode As Byte = &H11
     Public Property Length As Byte = 0
     Public Property World As String = ""
     Public Property ChatChannel As ChatChannel
