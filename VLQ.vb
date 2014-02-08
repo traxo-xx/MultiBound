@@ -32,6 +32,18 @@
         Next
         Return Convert.ToInt32(concat(l.ToArray), 2)
     End Function
+    Public Function FromsVLQ(ByVal Value As Byte()) As Integer
+        Dim l As New List(Of String)
+        For Each i As Byte In Value
+            l.Add(Convert.ToString(i, 2))
+        Next
+        Dim b As New Binary(concat(l.ToArray))
+        l.Clear()
+        For Each bb As String In b.Split8
+            l.Add(bb.Substring(1, 7))
+        Next
+        Return ((Convert.ToInt32(concat(l.ToArray), 2)) + 1) * 2
+    End Function
     Public Function TosVLQ(ByVal Value As Integer) As Byte()
         Value *= 2
         Value -= 1
@@ -93,5 +105,12 @@ Public Class Binary
             l.Add(str.Substring(i, 8))
         Next
         Return l.ToArray
+    End Function
+    Public Function IsLastVLQByte() As Boolean
+        If Bits(0) = "0"c Then
+            Return True
+        Else
+            Return False
+        End If
     End Function
 End Class
