@@ -77,7 +77,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data.vb" />
+    <Compile Include="PacketBuilder.vb" />
     <Compile Include="Misc.vb" />
     <Compile Include="Main.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

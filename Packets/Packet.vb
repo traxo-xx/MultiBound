@@ -28,15 +28,21 @@
     Public MustOverride Function GetByteArray() As Byte()
     'Public MustOverride Sub LoadByteArray(ByVal ByteArray As Byte())
     Private index As UInteger = 0
-    Public Function Package(Optional ByVal UsesVLQLengthing As Boolean = False) As Byte()
+    Public Function Package(Optional ByVal UsesVLQLengthing As Boolean = False, Optional ByVal DoubleLength As Boolean = False) As Byte()
         Dim size
+        Dim mult
+        If DoubleLength Then
+            mult = 2
+        Else
+            mult = 1
+        End If
         Dim f As Boolean
-        If Payload.Count > 256 Or UsesVLQLengthing = True Then
+        If (Payload.Count * mult) > 256 Or UsesVLQLengthing = True Then
             f = True
-            size = TosVLQ(Payload.Count)
+            size = TosVLQ(Payload.Count * mult)
         Else
             f = False
-            size = CByte(Payload.Count)
+            size = CByte(Payload.Count * mult)
         End If
         If Not f Then
             Dim ar As Byte() = {OPCode, size}

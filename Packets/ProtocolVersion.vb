@@ -9,10 +9,9 @@
     End Sub
 
     Public Overrides Function GetByteArray() As Byte()
-        Dim v As Byte() = {OPCode, Length}
-        Dim a As Byte() = BitConverter.GetBytes(Version)
-        Array.Reverse(a)
-        Dim val As Byte()() = {v, a}
-        Return Misc.Combine(val)
+        Dim p As New PacketBuilder
+        p.Write(Version)
+        Payload = p.GetBytes
+        Return Package()
     End Function
 End Class

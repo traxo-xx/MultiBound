@@ -27,14 +27,13 @@
         'aarray = Misc.Combine({darray, carray})
         'Dim earray = {TextLength}
         'Return Misc.Combine({aarray, earray, barray})
-        Dim aworld As Byte() = Data.WriteString(World)
-        Dim aname As Byte() = Data.WriteString(Name)
-        Dim atext As Byte() = Data.WriteString(Text)
-        Dim achan As Byte() = {CByte(ChatChannel)}
-        Dim aid As Byte() = BitConverter.GetBytes(ID)
-        Length = 1 + aworld.Length + aname.Length + atext.Length
-        Dim alength As Byte() = {Length}
-        Dim aop As Byte() = {OPCode}
-        Return Combine({aop, alength, achan, aworld, aid, aname, atext})
+        Dim p As New PacketBuilder()
+        p.Write(CByte(ChatChannel))
+        p.Write(World)
+        p.Write(ID)
+        p.Write(Name)
+        p.Write(Text)
+        Payload = p.GetBytes
+        Return Package(False, True)
     End Function
 End Class
