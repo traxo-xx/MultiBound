@@ -12,14 +12,12 @@
 
     Sub New(ByVal Bytes As Byte())
         MyBase.New(Bytes)
-        My.Computer.FileSystem.WriteAllBytes("C:\Users\Jesse\Documents\topkek.lelelel", Bytes, False)
-        ReadByte()
-        AssetDigest = ReadByteArray()
-        GetByteArray() 'lel, this is placeholder for claim
-        Dim u = ReadByte()
-        If u = 1 Then UUID = ReadBytes(16)
-        Name = ReadString()
-        Species = ReadString()
+        'AssetDigest = ReadByteArray()
+        'GetByteArray() 'lel, this is placeholder for claim
+        'Dim u = ReadByte()
+        'If u = 1 Then UUID = ReadBytes(16)
+        'Name = ReadString()
+        'Species = ReadString()
         'There's no point in continuing here, but i'll finish this for another day
     End Sub
 

@@ -10,7 +10,7 @@
     Public Property Text As String = ""
 
     Sub New(ByVal _World As String, ByVal Channel As ChatChannel, ByVal PlayerName As String, ByVal Chat As String)
-        MyBase.New({})
+        MyBase.New()
         World = _World
         ChatChannel = Channel
         Name = PlayerName

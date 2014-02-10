@@ -17,7 +17,7 @@ Public Class StarServer
             Console.WriteLine("Incoming Connection @ " & connClient.mClient.Client.LocalEndPoint.ToString)
             AddHandler connClient.dataReceived, AddressOf messageReceived
             Clients.Add(connClient)
-            Dim p As New ProtocolVersionPacket({})
+            Dim p As New ProtocolVersionPacket()
             Clients.Last.SendMessage(p.GetByteArray)
         Loop
     End Sub
@@ -26,7 +26,7 @@ Public Class StarServer
         RaiseEvent DataRecieved(sender, Data)
         Try
             Dim arr As Byte() = BasicUFL.ArrayConversion.FromList(Data)
-            Console.WriteLine("Opcode 0x" & Data(0).ToString("X2"))
+            If Data(0) <> 0 Then Console.WriteLine("Opcode 0x" & Data(0).ToString("X2"))
             Select Case Data(0)
                 Case OPCodes.ClientConnect
                     Console.WriteLine("Reading client statement...")

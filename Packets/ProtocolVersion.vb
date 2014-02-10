@@ -4,8 +4,8 @@
     Public Const Length As Byte = &H8
     Public Const Version As UInt32 = 636
 
-    Sub New(ByVal Bytes As Byte())
-        MyBase.New(Bytes)
+    Sub New()
+        MyBase.New()
     End Sub
 
     Public Overrides Function GetByteArray() As Byte()

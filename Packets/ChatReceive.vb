@@ -15,7 +15,6 @@
         'Dim a = BasicUFL.ArrayConversion.ToList(Bytes)
         'a.RemoveRange(0, 2)
         'Text = System.Text.Encoding.UTF8.GetChars(a.toarray)
-        ReadBytes(1)
         'ChatChannel = ReadByte()
         'World = ReadString()
         'ID = ReadUInt32()

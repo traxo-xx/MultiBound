@@ -1,6 +1,6 @@
 ﻿Partial Public MustInherit Class Packet
-    Sub New(ByVal Bytes() As Byte, Optional ByVal ForcesVLQRecognition As Boolean = False)
-        If Bytes Is Nothing Then Exit Sub
+    Sub New(Optional ByVal Bytes() As Byte = Nothing, Optional ByVal ForcesVLQRecognition As Boolean = False)
+        If Bytes Is Nothing Or Bytes.Length = 0 Then Exit Sub
         RawBytes = Bytes
         OPCode = ReadByte(True)
         Dim length As Integer = ReadByte(True)
