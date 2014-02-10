@@ -8,6 +8,11 @@
         Rounds = _Rounds
     End Sub
     Public Overrides Function GetByteArray() As Byte()
-
+        Dim p As New PacketBuilder
+        p.Write("")
+        p.Write(Salt)
+        p.Write(Rounds)
+        Payload = p.GetBytes
+        Return Package()
     End Function
 End Class
