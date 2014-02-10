@@ -1,5 +1,6 @@
 ﻿Module Main
-
+    Public Property Password As String = ""
+    Public Property Salt As String = "topkek"
     Sub Main()
         'Good evening everybody, and welcome to "Whose Packet is it Anyway?".
         'On tonight's show, it's the first one I ever got, the ProtocolVersion Packet.
