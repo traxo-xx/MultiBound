@@ -84,6 +84,7 @@ Public Class Binary
     Public Function ToBytes() As Byte()
         Dim l As New List(Of Byte)
         For Each s As String In Split8()
+            If s = "00000000" Then Continue For
             l.Add(Convert.ToByte(s, 2))
         Next
         Return l.ToArray

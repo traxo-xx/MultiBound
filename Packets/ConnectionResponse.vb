@@ -1,6 +1,6 @@
 ﻿Public Class ConnectionResponse
     Inherits Packet
-    Public Overrides Property OPCode As Byte = &H2
+    Public Overrides Property OPCode As Byte = &H1
     Public Property Success As Boolean
     Public Property ID As UInteger
     Public Property RejectionReason As String
@@ -20,6 +20,6 @@
             p.Write(RejectionReason)
         End If
         Payload = p.GetBytes
-        Return Package()
+        Return Package(False, True)
     End Function
 End Class

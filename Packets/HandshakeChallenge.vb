@@ -1,7 +1,8 @@
 ﻿Public Class HandshakeChallenge
     Inherits Packet
+    Public Overrides Property OPCode As Byte = &H3
     Public Property Salt As String
-    Public Property Rounds As Integer
+    Public Property Rounds As UInteger
     Sub New(ByVal _Salt As String, Optional ByVal _Rounds As Integer = 5000)
         MyBase.New()
         Salt = _Salt
@@ -13,6 +14,6 @@
         p.Write(Salt)
         p.Write(Rounds)
         Payload = p.GetBytes
-        Return Package()
+        Return Package(False, True)
     End Function
 End Class

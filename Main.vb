@@ -1,6 +1,7 @@
 ﻿Module Main
     Public Property Password As String = ""
-    Public Property Salt As String = "topkek"
+    Public Property Salt As String = "5uAciRZkmwKUkek3krU+s2LTvPHE6v2P"
+    Public Property Rounds As UInteger = 5000
     Sub Main()
         'Good evening everybody, and welcome to "Whose Packet is it Anyway?".
         'On tonight's show, it's the first one I ever got, the ProtocolVersion Packet.
@@ -12,8 +13,8 @@
         'This episode is all about networking compression, in other words, zlib is the name and decompression is the game.
         Console.Title = "MultiBound"
         Dim s As New StarServer(21025)
-        Do
-            System.Threading.Thread.Sleep(100)
+        Do While True
+            Console.Read()
         Loop
     End Sub
 

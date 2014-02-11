@@ -24,17 +24,25 @@
         Write(BitConverter.GetBytes(Value))
     End Sub
     Public Sub Write(ByVal Value As UInteger)
-        Write(BitConverter.GetBytes(Value))
+        Write(Reverse(BitConverter.GetBytes(Value)))
     End Sub
     Public Sub Write(ByVal Value As ULong)
         Write(BitConverter.GetBytes(Value))
     End Sub
+    Public Sub Write(ByVal Value As Boolean)
+        Write(BitConverter.GetBytes(Value))
+    End Sub
     Public Sub Write(ByVal Text As String)
-        If Text.Length = 0 Then Bytes.AddRange({1, 0})
+        If Text.Length = 0 Or Text = "" Then Bytes.Add(0) : Exit Sub
         Dim aarray = System.Text.Encoding.UTF8.GetBytes(Text)
         Dim barray = {CByte(Text.Length)}
-        Bytes.AddRange(Combine({aarray, barray}))
+        Bytes.AddRange(Combine({barray, aarray}))
     End Sub
+    Private Function Reverse(ByVal Bytes As Byte()) As Byte()
+        Dim l As List(Of Byte) = BasicUFL.ToList(Bytes)
+        l.Reverse()
+        Return l.ToArray
+    End Function
 
     Public Function GetBytes() As Byte()
         Return Bytes.ToArray

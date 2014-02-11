@@ -12,6 +12,6 @@
         Dim p As New PacketBuilder
         p.Write(Version)
         Payload = p.GetBytes
-        Return Package()
+        Return Package(False, True)
     End Function
 End Class

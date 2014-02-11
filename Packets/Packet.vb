@@ -1,11 +1,13 @@
 ﻿Partial Public MustInherit Class Packet
-    Sub New(Optional ByVal Bytes() As Byte = Nothing, Optional ByVal ForcesVLQRecognition As Boolean = False)
-        If Bytes Is Nothing Or Bytes.Length = 0 Then Exit Sub
+    Sub New(Optional ByVal Bytes() As Byte = Nothing, Optional ByVal ForcesVLQRecognition As Boolean = False, Optional ByVal DoubleLength As Boolean = False)
+        If Bytes Is Nothing Then Exit Sub
+        If Bytes.Length = 0 Then Exit Sub
         RawBytes = Bytes
         OPCode = ReadByte(True)
         Dim length As Integer = ReadByte(True)
+        If DoubleLength Then length /= 2
         index = 0
-        If length + 2 <> Bytes.Length Or ForcesVLQRecognition Then
+        If length <> Bytes.Length - 2 Or ForcesVLQRecognition Then
             'sVLQ packet
             index += 1
             length = ReadsVLQ(True)
@@ -78,6 +80,7 @@
     End Function
     Public Function ReadString(Optional ByVal Factor As Single = 1) As String
         Dim len = ReadByte() * Factor
+        If len < 1 Then Return ""
         Dim l As New List(Of Byte)
         For i = 1 To len
             l.Add(ReadByte)
