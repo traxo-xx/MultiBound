@@ -42,11 +42,11 @@
         For Each bb As String In b.Split8
             l.Add(bb.Substring(1, 7))
         Next
-        Return ((Convert.ToInt32(concat(l.ToArray), 2)) + 1) * 2
+        Return ((Convert.ToInt32(concat(l.ToArray), 2)) + 0) \ 2 '1) * 2
     End Function
     Public Function TosVLQ(ByVal Value As Integer) As Byte()
         Value *= 2
-        Value -= 1
+        'Value -= 1
         Dim b As New Binary(Value)
         Dim l As New List(Of String)
         Dim bb = b.Split7

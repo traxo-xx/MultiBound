@@ -13,7 +13,7 @@
             length = ReadsVLQ(True)
             If length < 0 Then
                 'zlib compressed
-                Throw New NotImplementedException("zlib is the name, uncompression is the game")
+                Payload = Misc.Deflate(BasicUFL.ToList(Bytes).GetRange(index, Bytes.Count - index).ToArray)
             Else
                 'uncompressed
                 Payload = BasicUFL.ToList(Bytes).GetRange(index, Bytes.Count - index).ToArray
