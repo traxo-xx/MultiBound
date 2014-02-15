@@ -50,9 +50,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>H:\Github2\BasicUFL\BasicUFL\bin\Release\BasicUFL.dll</HintPath>
     </Reference>
-    <Reference Include="HashLib">
-      <HintPath>..\..\..\Google Drive\dlls\HashLib.dll</HintPath>
-    </Reference>
     <Reference Include="Ionic.Zip">
       <HintPath>..\RCore\RCore\bin\Release\Ionic.Zip.dll</HintPath>
     </Reference>
@@ -63,9 +60,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="zlibnet">
-      <HintPath>..\..\..\Google Drive\dlls\zlibnet.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
@@ -109,6 +103,7 @@
     <Compile Include="Player.vb" />
     <Compile Include="StarServer.vb" />
     <Compile Include="VLQ.vb" />
+    <Compile Include="World.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

@@ -16,7 +16,7 @@
             p.Write(VLQ.ToVLQ(ID))
             p.Write(CByte(0))
         Else
-            p.Write(VLQ.ToVLQ(0))
+            p.Write(CByte(0))
             p.Write(RejectionReason)
         End If
         Payload = p.GetBytes

@@ -1,14 +1,11 @@
 ﻿Imports System.Net
 Imports System.Net.Sockets
-Imports HashLib
 
 Public Class StarServer
-    'Inherits RCore.SS
-
     Public Overridable Property Port As UShort = 0
     Public Overridable Property Server As Sockets.TcpListener
     Public Property Clients As New List(Of ConnectedClient)
-    Public Property IDCount As Integer = 0
+    Public Property IDCount As UInteger = 0
 
     Public Sub New(ByVal ServerPort As UShort)
         Server = New TcpListener(IPAddress.Any, ServerPort)
@@ -41,7 +38,7 @@ Public Class StarServer
             Select Case Data(0)
                 Case OPCodes.ClientConnect
                     Console.WriteLine("Reading client statement...")
-                    'Dim con As New ClientConnectPacket(Misc.TrimNull(Data.ToArray))
+                    Dim con As New ClientConnectPacket(Misc.TrimNull(Data.ToArray))
                     Console.WriteLine("Success! Sending HandshakeChallenge...")
                     Dim o As New HandshakeChallenge(Main.Salt, Main.Rounds)
                     sender.SendMessage(o.GetByteArray())
@@ -87,8 +84,6 @@ Public Class StarServer
         End Try
     End Sub
     Public Function Hash(ByVal Password As String, ByVal Salt As String, ByVal Rounds As Integer) As String
-        'Dim hh As IHash = HashFactory.Crypto.CreateSHA256()
-        'hh.Initialize()
         Dim h As New System.Security.Cryptography.SHA256Managed
         Dim hsh As String = Password
         For i As Integer = 1 To Rounds
@@ -134,7 +129,7 @@ Public Class ConnectedClient
     Public Property Username As String
 
     Private Sub doRead()
-        mClient.ReceiveBufferSize = &HAFFF
+        mClient.ReceiveBufferSize = &HFFFF
         Do
             Dim l(mClient.ReceiveBufferSize) As Byte
             mClient.GetStream.Read(l, 0, mClient.ReceiveBufferSize)

@@ -5,7 +5,7 @@
     Public Property Unknown As Integer = 9001
 
     Sub New()
-        MyBase.New(Nothing)
+        MyBase.New()
     End Sub
 
     Public Overrides Function GetByteArray() As Byte()
