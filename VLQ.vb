@@ -7,7 +7,7 @@
         Return s
     End Function
     Public Function ToVLQ(ByVal Value As Integer) As Byte()
-        Dim b As New Binary(Value)
+        Dim b = New Binary().NewInteger(Value)
         Dim l As New List(Of String)
         Dim bb = b.Split7
         For i = 0 To bb.Count - 1
@@ -17,7 +17,7 @@
                 l.Add("0" & bb(i))
             End If
         Next
-        b = New Binary(concat(l.ToArray))
+        b = New Binary().NewString(concat(l.ToArray))
         Return b.ToBytes
     End Function
     Public Function FromVLQ(ByVal Value As Byte()) As Integer
@@ -25,7 +25,7 @@
         For Each i As Byte In Value
             l.Add(Convert.ToString(i, 2))
         Next
-        Dim b As New Binary(concat(l.ToArray))
+        Dim b = New Binary().NewString(concat(l.ToArray))
         l.Clear()
         For Each bb As String In b.Split8
             l.Add(bb.Substring(1, 7))
@@ -37,7 +37,7 @@
         For Each i As Byte In Value
             l.Add(Convert.ToString(i, 2))
         Next
-        Dim b As New Binary(concat(l.ToArray))
+        Dim b = New Binary().NewString(concat(l.ToArray))
         l.Clear()
         For Each bb As String In b.Split8
             l.Add(bb.Substring(1, 7))
@@ -47,7 +47,7 @@
     Public Function TosVLQ(ByVal Value As Integer) As Byte()
         Value *= 2
         'Value -= 1
-        Dim b As New Binary(Value)
+        Dim b = New Binary().NewInteger(Value)
         Dim l As New List(Of String)
         Dim bb = b.Split7
         For i = 0 To bb.Count - 1
@@ -57,30 +57,36 @@
                 l.Add("0" & bb(i))
             End If
         Next
-        b = New Binary(concat(l.ToArray))
+        b = New Binary().NewString(concat(l.ToArray))
         Return b.ToBytes
     End Function
 End Module
 Public Class Binary
     Public Property Bits As String
-    Sub New(ByVal Value As Long)
+    Function NewLong(ByVal Value As Long) As Binary
         Bits = Convert.ToString(Value, 2)
-    End Sub
-    Sub New(ByVal Value As Integer)
+        Return Me
+    End Function
+    Function NewInteger(ByVal Value As Integer) As Binary
         Bits = Convert.ToString(Value, 2)
-    End Sub
-    Sub New(ByVal Value As UInteger)
+        Return Me
+    End Function
+    Function NewUInteger(ByVal Value As UInteger) As Binary
+        Bits = Convert.ToString(Value, 2).PadLeft(32, "0"c)
+        Return Me
+    End Function
+    Function NewByte(ByVal Value As Byte) As Binary
+        Bits = Convert.ToString(Value, 2).PadLeft(8, "0"c)
+        Return Me
+    End Function
+    Function NewSByte(ByVal Value As SByte) As Binary
         Bits = Convert.ToString(Value, 2)
-    End Sub
-    Sub New(ByVal Value As Byte)
-        Bits = Convert.ToString(Value, 2)
-    End Sub
-    Sub New(ByVal Value As SByte)
-        Bits = Convert.ToString(Value, 2)
-    End Sub
-    Sub New(ByVal Value As String)
+        Return Me
+    End Function
+    Function NewString(ByVal Value As String) As Binary
         Bits = Value
-    End Sub
+        Return Me
+    End Function
     Public Function ToBytes() As Byte()
         Dim l As New List(Of Byte)
         For Each s As String In Split8()
