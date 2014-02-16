@@ -35,6 +35,18 @@ Public Module Misc
         d.Close()
         Return m.ToArray
     End Function
+    Public Function Hash(ByVal account As String, ByVal password As String, ByVal challenge As String, ByVal rounds As Integer) As String
+        Dim salt = System.Text.Encoding.UTF8.GetBytes(account & challenge)
+        Dim sha = Security.Cryptography.SHA256.Create()
+        Dim hsh As Byte() = sha.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password))
+        For i = 0 To rounds
+            sha.Initialize()
+            sha.TransformBlock(hsh, 0, hsh.Length, Nothing, 0)
+            sha.TransformFinalBlock(salt, 0, salt.Length)
+            hsh = sha.Hash
+        Next
+        Return Convert.ToBase64String(hsh)
+    End Function
     Public Enum ChatChannel
         Universe = 1
         World = 0
