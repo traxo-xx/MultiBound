@@ -20,17 +20,19 @@ namespace MultiBound
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            star = new StarServer(21025);
+            star = new StarServer();
             star.newConsoleLine += newConsoleLine;
         }
-        private void newConsoleLine(string NewLine)
+        private void newConsoleLine(string NewLine, System.Drawing.Color TextColor)
         {
             if (rtConsole.InvokeRequired)
             {
-                rtConsole.Invoke(new Action<string>(newConsoleLine), NewLine);
+                rtConsole.Invoke(new Action<string, System.Drawing.Color>(newConsoleLine), NewLine, TextColor);
                 return;
-            } 
-            rtConsole.Text += Environment.NewLine + NewLine;
+            }
+            rtConsole.SelectionColor = TextColor;
+            rtConsole.Select(rtConsole.Text.Length, 0);
+            rtConsole.AppendText(NewLine + Environment.NewLine);
             rtConsole.Select(rtConsole.Text.Length, 0);
             rtConsole.ScrollToCaret();
         }

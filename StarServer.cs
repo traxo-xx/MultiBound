@@ -18,35 +18,35 @@ public class StarServer
     public string Password { get; set; }
 
 
-    public event newConsoleLineEventHandler newConsoleLine = new newConsoleLineEventHandler((a) => { });
-    public delegate void newConsoleLineEventHandler(string NewLine);
+    public event newConsoleLineEventHandler newConsoleLine = new newConsoleLineEventHandler((a, c) => { });
+    public delegate void newConsoleLineEventHandler(string NewLine, System.Drawing.Color TextColor);
 
-    public void NewConsoleLine(string NewLine)
+    public void NewConsoleLine(string NewLine, System.Drawing.Color TextColor)
     {
-        newConsoleLine(NewLine);
+        newConsoleLine(NewLine, TextColor);
     }
 
-	public StarServer(ushort ServerPort)
+	public StarServer()
 	{
         Port = 21025;
         Salt = "5uAciRZkmwKUkek3krU+s2LTvPHE6v2P";
         Rounds = 5000;
         Password = "";
-		Server = new TcpListener(IPAddress.Any, ServerPort);
+		Server = new TcpListener(IPAddress.Any, Port);
 		Server.Start();
 		System.Threading.Thread t = new System.Threading.Thread(DoListen);
 		t.IsBackground = true;
 		t.Start();
-		NewConsoleLine("Initialized server on port " + ServerPort.ToString());
 	}
 	public void DoListen()
 	{
-		System.Net.Sockets.TcpClient incomingClient = null;
-        NewConsoleLine("Ready.");
+        System.Net.Sockets.TcpClient incomingClient = null;
+        NewConsoleLine("Initialized server on port " + Port.ToString(), System.Drawing.Color.Green);
+        NewConsoleLine("Ready.", System.Drawing.Color.White);
 		do {
 			incomingClient = Server.AcceptTcpClient();
 			ConnectedClient connClient = new ConnectedClient(incomingClient);
-            NewConsoleLine("Incoming Connection @ " + connClient.mClient.Client.LocalEndPoint.ToString());
+            NewConsoleLine("Incoming Connection @ " + connClient.mClient.Client.LocalEndPoint.ToString(), System.Drawing.Color.White);
 			connClient.dataReceived += messageReceived;
 			Clients.Add(connClient);
 			ProtocolVersionPacket p = new ProtocolVersionPacket();
@@ -64,27 +64,27 @@ public class StarServer
 		try {
 			byte[] arr = Data.ToArray();
 			if (Data[0] != 0)
-                NewConsoleLine("Opcode 0x" + Data[0].ToString("X2"));
+                NewConsoleLine("Opcode 0x" + Data[0].ToString("X2"), System.Drawing.Color.White);
             switch ((OPCodes)Data[0]) {
 				case OPCodes.ClientConnect:
-                    NewConsoleLine("Reading client statement...");
+                    NewConsoleLine("Reading client statement...", System.Drawing.Color.White);
 					ClientConnectPacket con = new ClientConnectPacket(Misc.TrimNull(Data.ToArray()));
-                    NewConsoleLine("Success! Sending HandshakeChallenge...");
+                    NewConsoleLine("Success! Sending HandshakeChallenge...", System.Drawing.Color.White);
 					sender.BufferSize = 0x4ff;
 					HandshakeChallenge o = new HandshakeChallenge(Salt, Rounds);
 					sender.SendMessage(o.GetByteArray());
 					break;
 				case OPCodes.HandshakeResponse:
-                    NewConsoleLine("Hashing and checking password...");
+                    NewConsoleLine("Hashing and checking password...", System.Drawing.Color.White);
 					HandshakeResponse op = new HandshakeResponse(Misc.TrimNull(Data.ToArray()));
 					dynamic hsh = Misc.Hash("", Password, Salt, Rounds);
 					if (op.ProcessedHash == hsh | string.IsNullOrEmpty(Password)) {
-                        NewConsoleLine("Password confirmed, sending connect response...");
+                        NewConsoleLine("Password confirmed, sending connect response...", System.Drawing.Color.White);
 						ConnectionResponse c = new ConnectionResponse(true, (IDCount + 1), "");
 						IDCount += 1;
 						sender.SendMessage(c.GetByteArray());
 					} else {
-                        NewConsoleLine("Incorrect password, rejecting client...");
+                        NewConsoleLine("Incorrect password, rejecting client...", System.Drawing.Color.White);
 						ConnectionResponse c = new ConnectionResponse(false, 0, "Incorrect Password");
 						sender.SendMessage(c.GetByteArray());
 						Clients.Remove(sender);
@@ -99,7 +99,7 @@ public class StarServer
 					break;
 				case OPCodes.ChatRecieve:
 					ChatReceivePacket chatpacket = new ChatReceivePacket(Misc.TrimNull(Data.ToArray()));
-                    NewConsoleLine("New chat: " + sender.Username + ": " + chatpacket.Text);
+                    NewConsoleLine("New chat: " + sender.Username + ": " + chatpacket.Text, System.Drawing.Color.White);
 					ChatSendPacket chat = new ChatSendPacket("", ChatChannel.Universe, "player", chatpacket.Text);
 					chat.Text = chatpacket.Text;
 					foreach (ConnectedClient p in Clients) {
@@ -113,7 +113,7 @@ public class StarServer
 				//Blank Data
 				default:
 					dynamic a = Misc.TrimNull(arr);
-                    NewConsoleLine("Invalid opcode 0x" + Data[0].ToString("X2"));
+                    NewConsoleLine("Invalid opcode 0x" + Data[0].ToString("X2"), System.Drawing.Color.White);
 					// & "; data sent: " & BitConverter.ToString(Misc.TrimNull(arr)))
 					break;
 			}
