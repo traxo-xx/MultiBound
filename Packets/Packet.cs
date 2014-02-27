@@ -141,4 +141,56 @@ public abstract partial class Packet
 			throw new IndexOutOfRangeException("No VLQ (end) found");
 		return VLQ.FromsVLQ(l.ToArray());
 	}
+    public dynamic ReadVariant()
+	{
+	  int varType = ReadByte();
+	  
+	  switch(varType)
+	  {
+	    case 0x02:
+	      return null;
+	    case 0x03:
+	      //no idea what this is
+	      return null;
+	    case 0x04:
+	      //signed vlq
+	      return ReadsVLQ();
+	    case 0x05:
+	      //string
+	      return ReadString();
+        case 0x06:
+	      //variant
+	      //return ReadVariant
+	      uint varSize = ReadUInt32();
+	      List<dynamic> varList = new List<dynamic>(); //[varSize];
+	      for(int i = 0; i < varList.Count; i++)
+	      {
+	      	varList.Add(ReadVariant());
+	      }
+          return varList;
+	    case 0x07:
+	      //dict variant (map)
+	      return ReadVariantDict();
+        default:
+          throw new Exception("ReadVariant failed!");
+	  }
+	}
+
+    public Dictionary<string, int> ReadVariantDict(bool Raw = false)
+	{
+	  Dictionary<string, int> varDict = new Dictionary<string, int>();
+	  UInt32 varSize = ReadUInt32();
+	  try
+	  {
+          for (int i = 0; i < varSize; i++)
+	    {
+	      varDict.Add(ReadString(i), ReadVariant());
+	    }
+	    return varDict;
+	  }
+	  catch
+	  {
+	    throw new Exception("ReadVariant failed!");
+	  }
+	}
 }

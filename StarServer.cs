@@ -50,17 +50,17 @@ public class StarServer
 			connClient.dataReceived += messageReceived;
 			Clients.Add(connClient);
 			ProtocolVersionPacket p = new ProtocolVersionPacket();
-			dynamic pack = p.GetByteArray();
 			Clients[Clients.Count - 1].SendMessage(p.GetByteArray());
 		} while (true);
 	}
-	public event DataRecievedEventHandler DataRecieved;
+    public event DataRecievedEventHandler DataRecieved = new DataRecievedEventHandler((a, c) => { });
 	public delegate void DataRecievedEventHandler(ConnectedClient client, List<byte> Message);
 	public void messageReceived(ConnectedClient sender, List<byte> Data)
 	{
-		if (DataRecieved != null) {
-			DataRecieved(sender, Data);
-		}
+        if (DataRecieved != null)
+        {
+            DataRecieved(sender, Data);
+        }
 		try {
 			byte[] arr = Data.ToArray();
 			if (Data[0] != 0)
