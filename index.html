@@ -1,0 +1,186 @@
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
+
+  <title>Multibound</title>
+  <meta name="description" content="A custom implementation of the Starbound server.">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header>
+      <h1 class="title">Multibound</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">A custom implementation of the Starbound server.</p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/ROFLCopter64bit/MultiBound/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/ROFLCopter64bit/MultiBound/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/ROFLCopter64bit/MultiBound" class="code">View Multibound on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <h3>
+<a name="what-is-multibound" class="anchor" href="#what-is-multibound"><span class="octicon octicon-link"></span></a>What is Multibound?</h3>
+
+<p>Did you not read the tagline?</p>
+
+<p>"A custom implementation of the Starbound server."</p>
+
+<p>It is in a very untidy and broken mess right now, so if you want something that works, I suggest using <a href="https://github.com/StarryPy/StarryPy3k">StarryPy</a>. For a long while.</p>
+
+<h3>
+<a name="how-can-i-help" class="anchor" href="#how-can-i-help"><span class="octicon octicon-link"></span></a>How can I help?</h3>
+
+<p>Go read the table below and create a pull request with code that implements that specific packet.</p>
+
+<p>If you don't want to implement a packet, just create a pull request anyway.</p>
+
+<h1>
+<a name="current-state" class="anchor" href="#current-state"><span class="octicon octicon-link"></span></a>Current State</h1>
+
+<p>Stability: <strong>Leaked Pre-Alpha</strong></p>
+
+<p>Version: <strong>0</strong></p>
+
+<p>Website Version: <strong>How the heck do I add colours?</strong></p>
+
+<h3>
+<a name="features-implemented" class="anchor" href="#features-implemented"><span class="octicon octicon-link"></span></a>Features Implemented:</h3>
+
+<ul>
+<li>Connecting</li>
+</ul><h3>
+<a name="features-to-be-made" class="anchor" href="#features-to-be-made"><span class="octicon octicon-link"></span></a>Features to be made:</h3>
+
+<ul>
+<li>Worlds</li>
+<li>Items</li>
+<li>Plugins</li>
+<li>Pretty much everything</li>
+</ul><h3>
+<a name="packets-implemented" class="anchor" href="#packets-implemented"><span class="octicon octicon-link"></span></a>Packets Implemented</h3>
+
+<table>
+<thead><tr>
+<th>Number</th>
+<th>Packet</th>
+<th>Status</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Protocol Version</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Connection Response</td>
+<td>Partially Implemented</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Disconnect Response</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Handshake Challenge</td>
+<td>Broken</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Chat Received</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Universe Time Update</td>
+<td>Not Implemented</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Celestial Response</td>
+<td>Not Implemented</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Client Connect</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Client Disconnect</td>
+<td>Almost Implemented</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Handshake Response</td>
+<td>Partially Implemented</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Warp Command</td>
+<td>Not Implemented</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Chat Sent</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Celestial Request</td>
+<td>Not Implemented</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Client Context Update</td>
+<td>Not Implemented</td>
+</tr>
+<tr>
+<td>14</td>
+<td>World Start</td>
+<td>Almost Implemented</td>
+</tr>
+</tbody>
+</table><p>And it pretty much ends there.</p>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/ROFLCopter64bit" class="avatar"><img src="https://avatars.githubusercontent.com/u/2999155" width="48" height="48"/></a> <a href="https://github.com/ROFLCopter64bit">ROFLCopter64bit</a> maintains <a href="https://github.com/ROFLCopter64bit/MultiBound">Multibound</a></p>
+
+
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="http://pages.github.com/">GitHub Pages</a><br/>theme by <a href="https://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/ROFLCopter64bit/MultiBound/tarball/master" class="tar">tar</a><a href="https://github.com/ROFLCopter64bit/MultiBound/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+  
+</body>
+</html>
