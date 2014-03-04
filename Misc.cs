@@ -1,5 +1,6 @@
 using Microsoft.VisualBasic;
 using System;
+using Ionic.Zlib;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -29,21 +30,11 @@ public static class Misc
 	}
 	public static byte[] Deflate(byte[] Bytes)
 	{
-		MemoryStream m = new MemoryStream();
-		DeflateStream d = new DeflateStream(m, CompressionMode.Compress);
-		d.Write(Bytes, 0, Bytes.Length);
-		d.Flush();
-		d.Close();
-		return m.ToArray();
+        return ZlibStream.UncompressBuffer(Bytes);
 	}
 	public static byte[] Inflate(byte[] Bytes)
 	{
-		MemoryStream m = new MemoryStream(Bytes);
-		DeflateStream d = new DeflateStream(m, CompressionMode.Decompress);
-		d.Write(Bytes, 0, Bytes.Length);
-		d.Flush();
-		d.Close();
-		return m.ToArray();
+        return ZlibStream.CompressBuffer(Bytes);
 	}
 	public static string Hash(string account, string password, string challenge, int rounds)
 	{
@@ -58,7 +49,7 @@ public static class Misc
 		}
 		return Convert.ToBase64String(hsh);
 	}
-    public static dynamic ToList(byte[] lel)
+    public static List<byte> ToList(byte[] lel)
     {
         return new List<byte>(lel);
     }

@@ -6,7 +6,7 @@ using System.Data;
 using System.Diagnostics;
 public abstract partial class Packet
 {
-	public Packet(byte[] Bytes = null, bool ForcesVLQRecognition = false, bool DoubleLength = false)
+	public Packet(byte[] Bytes = null, bool ForcesVLQRecognition = false)
 	{
 		if (Bytes == null)
 			return;
@@ -15,32 +15,32 @@ public abstract partial class Packet
 		RawBytes = Bytes;
 		OPCode = ReadByte(true);
 		int length = ReadByte(true);
-		if (DoubleLength)
-			length /= 2;
-		index = 0;
+		index = 1;
 		if (length != Bytes.Length - 2 | ForcesVLQRecognition) {
 			//sVLQ packet
-			index += 1;
-			length = ReadsVLQ(true);
+			length = (int)ReadsVLQ(true);
 			if (length < 0) {
 				//zlib compressed
-				Payload = Misc.Deflate(Misc.ToList(Bytes).GetRange(index, Bytes.Length - index).ToArray);
+                List<byte> metapayload = Misc.ToList(Bytes);
+                Payload = Misc.Deflate(metapayload.GetRange(index, Bytes.Length - index).ToArray());
+                isCompressed = true;
 			} else {
 				//uncompressed
-                Payload = Misc.ToList(Bytes).GetRange(index, Bytes.Length - index).ToArray;
+                Payload = Misc.ToList(Bytes).GetRange(index, Bytes.Length - index).ToArray();
 			}
 		} else {
 			//Non sVLQ packet
-            Payload = Misc.ToList(Bytes).GetRange(2, Bytes.Length - 2).ToArray;
+            Payload = Misc.ToList(Bytes).GetRange(2, Bytes.Length - 2).ToArray();
 		}
 		index = 0;
 	}
 	public virtual byte OPCode { get; set; }
+    public bool isCompressed = false;
 	public byte[] RawBytes { get; set; }
 	public byte[] Payload { get; set; }
 	public abstract byte[] GetByteArray();
 	//Public MustOverride Sub LoadByteArray(ByVal ByteArray As Byte())
-	private uint index = 0;
+	private int index = 0;
 	public byte[] Package(bool UsesVLQLengthing = false, bool DoubleLength = false)
 	{
 		dynamic size = null;
@@ -83,11 +83,18 @@ public abstract partial class Packet
 		index += 1;
 		return r;
 	}
-	public byte[] ReadByteArray()
+	public byte[] ReadByteArray(bool signed = false)
 	{
-		return ReadBytes(ReadVLQ());
+        if (signed)
+        {
+            return ReadBytes((ulong)ReadsVLQ());
+        }
+        else
+        {
+            return ReadBytes(ReadVLQ());
+        }
 	}
-	public byte[] ReadBytes(int Amount)
+	public byte[] ReadBytes(ulong Amount)
 	{
 		List<byte> r = new List<byte>();
 		for (uint i = 1; i <= Amount; i++) {
@@ -111,7 +118,7 @@ public abstract partial class Packet
 		}
 		return new string(System.Text.Encoding.UTF8.GetChars(l.ToArray()));
 	}
-	public int ReadVLQ(bool Raw = false)
+	public ulong ReadVLQ(bool Raw = false)
 	{
 		List<byte> l = new List<byte>();
 		bool b = false;
@@ -126,7 +133,7 @@ public abstract partial class Packet
 			throw new IndexOutOfRangeException("No VLQ (end) found");
 		return VLQ.FromVLQ(l.ToArray());
 	}
-	public int ReadsVLQ(bool Raw = false)
+	public long ReadsVLQ(bool Raw = false)
 	{
 		List<byte> l = new List<byte>();
 		bool b = false;
@@ -147,11 +154,14 @@ public abstract partial class Packet
 	  
 	  switch(varType)
 	  {
+        case 0x01:
+          return null;
 	    case 0x02:
-	      return null;
+          //double
+          throw new NotImplementedException("Doubles aren't implemented as variants yet");
 	    case 0x03:
-	      //no idea what this is
-	      return null;
+	      //bool
+          return ReadBoolean();
 	    case 0x04:
 	      //signed vlq
 	      return ReadsVLQ();
@@ -193,4 +203,9 @@ public abstract partial class Packet
 	    throw new Exception("ReadVariant failed!");
 	  }
 	}
+
+    public bool ReadBoolean()
+    {
+        return Convert.ToBoolean(ReadByte());
+    }
 }

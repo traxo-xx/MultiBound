@@ -6,72 +6,56 @@ using System.Data;
 using System.Diagnostics;
 public static class VLQ
 {
-	private static string concat(string[] str)
+	public static byte[] ToVLQ(long Value)
 	{
-		string s = "";
-		foreach (string st in str) {
-			s += st;
-		}
-		return s;
-	}
-	public static byte[] ToVLQ(int Value)
-	{
-		dynamic b = new Binary().NewInteger(Value);
-		List<string> l = new List<string>();
-		dynamic bb = b.Split7;
-		for (int i = 0; i <= bb.Count - 1; i++) {
-			if (i < bb.Count - 1) {
-				l.Add("1" + bb(i));
+		dynamic b = new Binary().NewLong(Value);
+        string s = "";
+		string[] bb = b.Split7;
+		for (int i = 0; i <= bb.Length - 1; i++) {
+            if (i < bb.Length - 1)
+            {
+				s += "1" + bb[i];
 			} else {
-				l.Add("0" + bb(i));
+				s += "0" + bb[i];
 			}
 		}
-		b = new Binary().NewString(concat(l.ToArray()));
+		b = new Binary().NewString(s);
 		return b.ToBytes;
 	}
-	public static int FromVLQ(byte[] Value)
+	public static byte[] TosVLQ(long Value)
 	{
-		List<string> l = new List<string>();
-		foreach (byte i in Value) {
-			l.Add(Convert.ToString(i, 2));
-		}
-		dynamic b = new Binary().NewString(concat(l.ToArray()));
-		l.Clear();
-		foreach (string bb in b.Split8) {
-			l.Add(bb.Substring(1, 7));
-		}
-		return Convert.ToInt32(concat(l.ToArray()), 2);
+        long v = Value;
+        bool neg = v < 0;
+        v *= 2;
+        if (neg) {
+            v=- 1;
+            v *= -1;
+        }
+        return ToVLQ(v);
 	}
-	public static int FromsVLQ(byte[] Value)
+	public static ulong FromVLQ(byte[] Value)
 	{
-		List<string> l = new List<string>();
-		foreach (byte i in Value) {
-			l.Add(Convert.ToString(i, 2));
-		}
-		dynamic b = new Binary().NewString(concat(l.ToArray()));
-		l.Clear();
-		foreach (string bb in b.Split8) {
-			l.Add(bb.Substring(1, 7));
-		}
-		return ((Convert.ToInt32(concat(l.ToArray()), 2)) + 0) / 2;
-		//1) * 2
+        string s = "";
+        foreach (byte i in Value)
+        {
+            s += Convert.ToString(i, 2);
+        }
+        Binary b = new Binary().NewString(s);
+        s = "";
+        foreach (string bb in b.Split8())
+        {
+            s += bb.Substring(1, 7);
+        }
+        return Convert.ToUInt64(s, 2);
 	}
-	public static byte[] TosVLQ(int Value)
+	public static long FromsVLQ(byte[] Value)
 	{
-		Value *= 2;
-		//Value -= 1
-		dynamic b = new Binary().NewInteger(Value);
-		List<string> l = new List<string>();
-		dynamic bb = b.Split7;
-		for (int i = 0; i <= bb.Count - 1; i++) {
-			if (i < bb.Count - 1) {
-				l.Add("1" + bb(i));
-			} else {
-				l.Add("0" + bb(i));
-			}
-		}
-		b = new Binary().NewString(concat(l.ToArray()));
-		return b.ToBytes;
+        ulong vlq = FromVLQ(Value);
+        bool neg = vlq % 2 == 1;
+        if (neg) vlq++;
+        vlq /= 2;
+        if (neg) return -(long)vlq;
+        return (long)vlq;
 	}
 }
 public class Binary
