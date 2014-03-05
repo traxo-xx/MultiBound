@@ -1,4 +1,3 @@
-using Microsoft.VisualBasic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,63 +13,30 @@ public abstract partial class Packet
 			return;
 		RawBytes = Bytes;
 		OPCode = ReadByte(true);
-		int length = ReadByte(true);
-		index = 1;
-		if (length != Bytes.Length - 2 | ForcesVLQRecognition) {
-			//sVLQ packet
-			length = (int)ReadsVLQ(true);
-			if (length < 0) {
-				//zlib compressed
-                List<byte> metapayload = Misc.ToList(Bytes);
-                Payload = Misc.Deflate(metapayload.GetRange(index, Bytes.Length - index).ToArray());
-                isCompressed = true;
-			} else {
-				//uncompressed
-                Payload = Misc.ToList(Bytes).GetRange(index, Bytes.Length - index).ToArray();
-			}
+		int length = (int)ReadsVLQ(true);
+		if (length < 0) {
+			//zlib compressed
+            List<byte> metapayload = Misc.ToList(Bytes);
+            Payload = Misc.Deflate(metapayload.GetRange(index, Bytes.Length - index).ToArray());
+            isCompressed = true;
 		} else {
-			//Non sVLQ packet
-            Payload = Misc.ToList(Bytes).GetRange(2, Bytes.Length - 2).ToArray();
+			//uncompressed
+            Payload = Misc.ToList(Bytes).GetRange(index, Bytes.Length - index).ToArray();
 		}
 		index = 0;
 	}
 	public virtual byte OPCode { get; set; }
-    public bool isCompressed = false;
+    public bool isCompressed = false; 
 	public byte[] RawBytes { get; set; }
 	public byte[] Payload { get; set; }
 	public abstract byte[] GetByteArray();
-	//Public MustOverride Sub LoadByteArray(ByVal ByteArray As Byte())
 	private int index = 0;
-	public byte[] Package(bool UsesVLQLengthing = false, bool DoubleLength = false)
+	public byte[] Package()
 	{
-		dynamic size = null;
-		dynamic mult = null;
-		if (DoubleLength) {
-			mult = 2;
-		} else {
-			mult = 1;
-		}
-		bool f = false;
-        if ((Payload.Length * mult) > 256 | UsesVLQLengthing == true)
-        {
-			f = true;
-            size = VLQ.TosVLQ(Payload.Length * mult);
-		} else {
-			f = false;
-            size = Convert.ToByte(Payload.Length * mult);
-		}
-		if (!f) {
-			byte[] ar = {
-				OPCode,
-				size
-			};
-            byte[][] lel = {ar,	Payload	};
-            return Misc.Combine(lel);
-		} else {
-			byte[] ar = { OPCode };
-            byte[][] lel = {ar,	size,Payload};
-			return Misc.Combine(lel);
-		}
+		byte[] size = VLQ.TosVLQ(Payload.Length);
+		byte[] ar = { OPCode };
+        byte[][] lel = {ar,	size, Payload};
+		return Misc.Combine(lel);
 	}
 	public byte ReadByte(bool Raw = false)
 	{
@@ -107,13 +73,13 @@ public abstract partial class Packet
 	{
 		return BitConverter.ToUInt16(ReadBytes(4), 0);
 	}
-	public string ReadString(double Factor = 1)
+	public string ReadString()
 	{
-		dynamic len = ReadByte() * Factor;
+		ulong len = ReadVLQ();
 		if (len < 1)
 			return "";
 		List<byte> l = new List<byte>();
-		for (int i = 1; i <= len; i++) {
+		for (ulong i = 1; i <= len; i++) {
 			l.Add(ReadByte());
 		}
 		return new string(System.Text.Encoding.UTF8.GetChars(l.ToArray()));
@@ -155,6 +121,7 @@ public abstract partial class Packet
 	  switch(varType)
 	  {
         case 0x01:
+          //null
           return null;
 	    case 0x02:
           //double
@@ -194,7 +161,7 @@ public abstract partial class Packet
 	  {
           for (int i = 0; i < varSize; i++)
 	    {
-	      varDict.Add(ReadString(i), ReadVariant());
+	      varDict.Add(ReadString(), ReadVariant());
 	    }
 	    return varDict;
 	  }
