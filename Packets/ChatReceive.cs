@@ -1,4 +1,3 @@
-using Microsoft.VisualBasic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,7 +24,7 @@ public class ChatReceivePacket : Packet
 		//World = ReadString()
 		//ID = ReadUInt32()
 		//Name = ReadString()
-		Text = ReadString(0.5);
+		Text = ReadString();
 	}
 	public override byte[] GetByteArray()
 	{

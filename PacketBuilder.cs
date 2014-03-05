@@ -1,4 +1,3 @@
-using Microsoft.VisualBasic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,7 +26,7 @@ public class PacketBuilder
 	}
 	public void Write(int Value)
 	{
-		Write(BitConverter.GetBytes(Value));
+        Write(Reverse(BitConverter.GetBytes(Value)));
 	}
 	public void Write(long Value)
 	{
@@ -64,6 +63,11 @@ public class PacketBuilder
 		l.Reverse();
 		return l.ToArray();
 	}
+
+    public PacketBuilder()
+    {
+        Bytes = new List<byte>();
+    }
 
 	public byte[] GetBytes()
 	{

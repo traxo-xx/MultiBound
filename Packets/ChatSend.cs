@@ -1,4 +1,3 @@
-using Microsoft.VisualBasic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,16 +23,6 @@ public class ChatSendPacket : Packet
 	}
 	public override byte[] GetByteArray()
 	{
-		//Length = (6 + Name.Length + 1 + Text.Length) * 2
-		//TextLength = Text.Length
-		//NameLength = Name.Length
-		//Dim aarray As Byte()
-		//Dim barray As Byte() = System.Text.Encoding.UTF8.GetBytes(Text)
-		//Dim carray As Byte() = System.Text.Encoding.UTF8.GetBytes(Name)
-		//Dim darray As Byte() = {OPCode, Length, 1, 0, 0, 0, 0, 1, NameLength}
-		//aarray = Misc.Combine({darray, carray})
-		//Dim earray = {TextLength}
-		//Return Misc.Combine({aarray, earray, barray})
 		PacketBuilder p = new PacketBuilder();
 		p.Write(Convert.ToByte(Channel));
 		p.Write(World);
@@ -41,6 +30,6 @@ public class ChatSendPacket : Packet
 		p.Write(Name);
 		p.Write(Text);
 		Payload = p.GetBytes();
-		return Package(false, true);
+		return Package();
 	}
 }

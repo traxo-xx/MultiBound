@@ -1,4 +1,3 @@
-using Microsoft.VisualBasic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,11 +10,13 @@ public class Player
 	public string Account { get; set; }
 	public byte[] UUID { get; set; }
 	public List<string> ChatLog { get; set; }
+    public ClientConnectPacket Raw { get; set; }
 	public Player(ClientConnectPacket Connect)
 	{
 		Name = Connect.Name;
 		Species = Connect.Species;
 		Account = Connect.Account;
 		UUID = Connect.UUID;
+        Raw = Connect;
 	}
 }

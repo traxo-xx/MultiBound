@@ -1,4 +1,3 @@
-using Microsoft.VisualBasic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ public class WorldStartPacket : Packet
 	public override byte OPCode { get; set; }
 
 
-	public WorldStartPacket(World World)
+	public WorldStartPacket(byte[] World)
 	{
 	}
 

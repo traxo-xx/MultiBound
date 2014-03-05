@@ -1,4 +1,3 @@
-using Microsoft.VisualBasic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,7 +17,6 @@ public class ClientConnectPacket : Packet
 
 	public ClientConnectPacket(byte[] Bytes) : base(Bytes)
 	{
-        byte[] lel = Payload;
 		AssetDigest = ReadByteArray();
 		Claim = ReadVariant();
         if (ReadBoolean()) UUID = ReadBytes(16);

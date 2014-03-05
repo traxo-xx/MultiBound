@@ -1,4 +1,3 @@
-using Microsoft.VisualBasic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,16 +10,18 @@ public class HandshakeChallenge : Packet
 	public int Rounds { get; set; }
 	public HandshakeChallenge(string _Salt, int _Rounds = 5000) : base()
 	{
+        OPCode = 0x3;
 		Salt = _Salt;
-        		Rounds = _Rounds;
+        Rounds = _Rounds;
 	}
 	public override byte[] GetByteArray()
 	{
 		PacketBuilder p = new PacketBuilder();
-		p.Write("");
+		p.Write(((byte)0));
 		p.Write(Salt);
 		p.Write(Rounds);
 		Payload = p.GetBytes();
-		return Package(false, true);
+        byte[] lel = Package();
+        return Package();
 	}
 }
