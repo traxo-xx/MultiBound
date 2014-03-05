@@ -1,4 +1,3 @@
-using Microsoft.VisualBasic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,9 +7,9 @@ public static class VLQ
 {
 	public static byte[] ToVLQ(long Value)
 	{
-		dynamic b = new Binary().NewLong(Value);
+		Binary b = new Binary().NewLong(Value);
         string s = "";
-		string[] bb = b.Split7;
+		string[] bb = b.Split7();
 		for (int i = 0; i <= bb.Length - 1; i++) {
             if (i < bb.Length - 1)
             {
@@ -20,7 +19,7 @@ public static class VLQ
 			}
 		}
 		b = new Binary().NewString(s);
-		return b.ToBytes;
+		return b.ToBytes();
 	}
 	public static byte[] TosVLQ(long Value)
 	{
@@ -95,8 +94,7 @@ public class Binary
 	{
 		List<byte> l = new List<byte>();
 		foreach (string s in Split8()) {
-			if (s == "00000000")
-				continue;
+			if (s == "00000000") continue;
 			l.Add(Convert.ToByte(s, 2));
 		}
 		return l.ToArray();
@@ -108,6 +106,7 @@ public class Binary
 		string str = Bits.PadLeft(Bits.Length + pad, '0');
         for (int i = 0; i <= str.Length - 1; i += 7)
         {
+            if (str.Substring(i, 7) == "0000000") continue; 
 			l.Add(str.Substring(i, 7));
 		}
 		return l.ToArray();
